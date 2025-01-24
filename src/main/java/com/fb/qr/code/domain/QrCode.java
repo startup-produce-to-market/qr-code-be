@@ -22,7 +22,7 @@ public class QrCode {
 
     private String purpose;
 
-    private String url;
+    private String downloadUrl;
 
     private Map<String, Object> attributes;
 
