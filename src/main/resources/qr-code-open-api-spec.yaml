@@ -1,0 +1,110 @@
+openapi: "3.1.0"
+info:
+  title: "qr_code_be API"
+  description: "qr_code_be API"
+  version: "1.0.0"
+servers:
+  - url: "https://qr_code_be"
+paths:
+  /app/v1/qrcode:
+    post:
+      summary: "POST app/v1/qrcode"
+      operationId: "createQrcode"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QrCode"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    get:
+      summary: "GET app/v1/qrcode"
+      operationId: "getQrCodes"
+      parameters:
+        - name: "start"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "end"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "type"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /app/v1/qrcode/{id}:
+    get:
+      summary: "GET app/v1/qrcode/{id}"
+      operationId: "getQrcode"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    delete:
+      summary: "DELETE app/v1/qrcode/{id}"
+      operationId: "deleteQrcode"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+components:
+  schemas:
+    QrCode:
+      type: "object"
+      required:
+        - type
+        - purpose
+      properties:
+        id:
+          type: "string"
+        type:
+          type: "string"
+        purpose:
+          type: "string"
+        downloadUrl:
+          type: "string"
+        attributes:
+          type: "string"
+        created_at:
+          type: "string"
+          format: "date-time"
+        updated_at:
+          type: "string"
+          format: "date-time"

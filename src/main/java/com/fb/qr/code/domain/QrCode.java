@@ -28,7 +28,7 @@ public class QrCode {
 
     private boolean isActive;
 
-    private boolean isDeleted;
+    private boolean isExpired;
 
     private Date created_at;
 

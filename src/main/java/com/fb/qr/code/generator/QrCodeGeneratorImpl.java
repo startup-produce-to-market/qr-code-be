@@ -41,8 +41,19 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(MediaType.parseMediaTypes("application/json; charset=utf-8"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrGeneratorConfig.getQrGeneratorUrl(),
-                                                    HttpMethod.POST, entity, HashMap.class);
+        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrGeneratorConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, HashMap.class);
+        if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
+            throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
+
+        return createQrResponse;
+    }
+
+    @Override
+    public ResponseEntity<?> downloadQr(Map<String, Object> request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<byte[]> createQrResponse = restTemplate.exchange(qrGeneratorConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, byte[].class);
         if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
             throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
 
