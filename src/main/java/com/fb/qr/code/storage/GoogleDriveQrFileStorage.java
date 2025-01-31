@@ -42,7 +42,7 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
     }
 
     @Override
-    public void storeFile(byte[] fileContents, Map<String, String> properties) {
+    public Map<String,Object> storeFile(byte[] fileContents, Map<String, String> properties) {
         try {
             InputStream inputStream = new ByteArrayInputStream(fileContents);
             File file = File.createTempFile(properties.get("id"), properties.get("extension"));
@@ -51,6 +51,7 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
             drivefile.setName(properties.get("id") + "." + properties.get("extension"));
             FileContent fileContent = new FileContent(properties.get("content-type"), file);
             com.google.api.services.drive.model.File createdDriveFile = googleDriveClient.files().create(drivefile, fileContent).execute();
+            return buildResponse(createdDriveFile);
         } catch (Exception e) {
             log.error("Error storing qr file : {}", properties.get("id") + "." + properties.get("extension"), e);
             Map<String, Object> errorAttributes = new HashMap<>();
@@ -80,5 +81,9 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
                     .errorCode(ErrorConstants.RETRIEVE_QR_FILE_ERROR_CODE)
                     .errorAttributes(errorAttributes).build();
         }
+    }
+
+    private Map<String,Object> buildResponse(com.google.api.services.drive.model.File file) {
+        return Map.of("storageReferenceId", file.getId(), "size", file.getSize(), "name", file.getName());
     }
 }

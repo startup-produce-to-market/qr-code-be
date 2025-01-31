@@ -10,8 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class QrGeneratorConfig {
 
-    @Value("${qr.code.generator.url}")
+    @Value("${qr.code.generator.url")
     private String qrGeneratorUrl;
     @Value("${qr.code.download.url.reference}")
     private String qrCodeDownloadUrlReference;
+    @Value("${qr.code.generator}")
+    private String qrCodeGenrator;
+    @Value("${qr.code.file.storage}")
+    private String qrCodeFileStorage;
 }

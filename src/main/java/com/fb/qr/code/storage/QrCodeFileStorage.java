@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface QrCodeFileStorage {
 
-    void storeFile(byte[] fileContents, Map<String, String> properties);
+    Map<String,Object> storeFile(byte[] fileContents, Map<String, String> properties);
 
     String generatePublicUrl(String filePath);
 

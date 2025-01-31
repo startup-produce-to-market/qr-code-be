@@ -22,13 +22,13 @@ public class QrCode {
 
     private String purpose;
 
-    private String downloadUrl;
-
     private Map<String, Object> attributes;
 
     private boolean isActive;
 
     private boolean isExpired;
+
+    private boolean downloadAvailable;
 
     private Date created_at;
 
