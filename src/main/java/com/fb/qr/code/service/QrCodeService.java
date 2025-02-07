@@ -4,8 +4,9 @@ import com.fb.qr.code.domain.QrCode;
 import com.fb.qr.code.error.ErrorConstants;
 import com.fb.qr.code.error.GenerateQrCodeException;
 import com.fb.qr.code.generator.QrCodeGenerator;
-import com.fb.qr.code.generator.config.QrGeneratorConfig;
+import com.fb.qr.code.generator.config.QrCodeGeneratorConfig;
 import com.fb.qr.code.repository.QrCodeRepository;
+import com.fb.qr.code.service.config.QrCodeCommonConfig;
 import com.fb.qr.code.storage.QrCodeFileStorage;
 import com.fb.qr.code.storage.StoreQrCodeProcess;
 import jakarta.annotation.PostConstruct;
@@ -30,19 +31,22 @@ public class QrCodeService {
 
     private final QrCodeFileStorage qrCodeFileStorage;
 
-    private final QrGeneratorConfig qrGeneratorConfig;
+    private final QrCodeCommonConfig qrCodeCommonConfig;
+
+    private final QrCodeGeneratorConfig qrCodeGeneratorConfig;
 
     private ExecutorService executorService;
 
     public QrCodeService(QrCodeRepository qrCodeRepository,
                          QrCodeGenerator qrCodeGenerator,
                          QrCodeFileStorage qrCodeFileStorage,
-                         QrGeneratorConfig qrGeneratorConfig) {
+                         QrCodeCommonConfig qrCodeCommonConfig,
+                         QrCodeGeneratorConfig qrCodeGeneratorConfig) {
         this.qrCodeRepository = qrCodeRepository;
         this.qrCodeGenerator = qrCodeGenerator;
         this.qrCodeFileStorage = qrCodeFileStorage;
-        this.qrGeneratorConfig = qrGeneratorConfig;
-
+        this.qrCodeCommonConfig = qrCodeCommonConfig;
+        this.qrCodeGeneratorConfig = qrCodeGeneratorConfig;
     }
 
     @PostConstruct
@@ -64,14 +68,18 @@ public class QrCodeService {
     }
 
     private void generateAndStoreQrCode(QrCode qrCode) {
-        switch (this.qrGeneratorConfig.getQrCodeGenrator()) {
+        switch (this.qrCodeCommonConfig.getQrCodeGenrator()) {
             case "QR_TIGER":
-                Map<String, Object> qrGeneratorResponse = (Map<String, Object>) qrCodeGenerator.generateQr(Map.of()).getBody();
+                Map<String, Object> qrGeneratorResponse = (Map<String, Object>) qrCodeGenerator.generateQr(
+                        Map.of("text", qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getQrText(),
+                                "category", qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getQrCategory())).getBody();
                 assert qrGeneratorResponse != null;
                 ResponseEntity<?> qrFileContent = qrCodeGenerator.downLoadQr(String.valueOf(
-                        qrGeneratorResponse.get(qrGeneratorConfig.getQrCodeDownloadUrlReference())));
+                        qrGeneratorResponse.get(qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getDownloadReference())));
                 executorService.execute(new StoreQrCodeProcess(qrCodeFileStorage, (byte[]) qrFileContent.getBody(),
-                        Map.of(), qrCodeRepository));
+                        Map.of("qrCodeId",qrCode.getId(),
+                                "extension", qrCodeCommonConfig.getQrCodeFileStorageExtension(),
+                                "content-type", qrCodeCommonConfig.getQrCodeFileStorageMedia()), qrCodeRepository));
 
             default:
                 log.info("");

@@ -3,7 +3,7 @@ package com.fb.qr.code.generator;
 import com.fb.qr.code.error.DownloadQrCodeException;
 import com.fb.qr.code.error.ErrorConstants;
 import com.fb.qr.code.error.GenerateQrCodeException;
-import com.fb.qr.code.generator.config.QrGeneratorConfig;
+import com.fb.qr.code.service.config.QrCodeCommonConfig;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -17,11 +17,11 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
     private final RestTemplate restTemplate;
 
-    private final QrGeneratorConfig qrGeneratorConfig;
+    private final QrCodeCommonConfig qrCodeCommonConfig;
 
-    public QrCodeGeneratorImpl(RestTemplate restTemplate, QrGeneratorConfig qrGeneratorConfig) {
+    public QrCodeGeneratorImpl(RestTemplate restTemplate, QrCodeCommonConfig qrCodeCommonConfig) {
         this.restTemplate = restTemplate;
-        this.qrGeneratorConfig = qrGeneratorConfig;
+        this.qrCodeCommonConfig = qrCodeCommonConfig;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(MediaType.parseMediaTypes("application/json; charset=utf-8"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrGeneratorConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, HashMap.class);
+        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, HashMap.class);
         if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
             throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
 
@@ -53,7 +53,7 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<byte[]> createQrResponse = restTemplate.exchange(qrGeneratorConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, byte[].class);
+        ResponseEntity<byte[]> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, byte[].class);
         if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
             throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
 

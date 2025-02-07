@@ -45,17 +45,17 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
     public Map<String,Object> storeFile(byte[] fileContents, Map<String, String> properties) {
         try {
             InputStream inputStream = new ByteArrayInputStream(fileContents);
-            File file = File.createTempFile(properties.get("id"), properties.get("extension"));
+            File file = File.createTempFile(properties.get("qrCodeId"), properties.get("extension"));
             FileUtils.copyInputStreamToFile(inputStream, file);
             com.google.api.services.drive.model.File drivefile = new com.google.api.services.drive.model.File();
-            drivefile.setName(properties.get("id") + "." + properties.get("extension"));
+            drivefile.setName(properties.get("qrCodeId") + "." + properties.get("extension"));
             FileContent fileContent = new FileContent(properties.get("content-type"), file);
             com.google.api.services.drive.model.File createdDriveFile = googleDriveClient.files().create(drivefile, fileContent).execute();
             return buildResponse(createdDriveFile);
         } catch (Exception e) {
-            log.error("Error storing qr file : {}", properties.get("id") + "." + properties.get("extension"), e);
+            log.error("Error storing qr file : {}", properties.get("qrCodeId") + "." + properties.get("extension"), e);
             Map<String, Object> errorAttributes = new HashMap<>();
-            errorAttributes.put("qrFileName", properties.get("id") + "." + properties.get("extension"));
+            errorAttributes.put("qrFileName", properties.get("qrCodeId") + "." + properties.get("extension"));
             throw StoreQrFileException.builder().message(ErrorConstants.STORE_QR_FILE_ERROR_MSG)
                     .errorCode(ErrorConstants.STORE_QR_FILE_ERROR_CODE)
                     .errorAttributes(errorAttributes).build();
@@ -76,7 +76,7 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
         } catch (IOException e) {
             log.error("Error retrieving the qr file : {}", fileName, e);
             Map<String, Object> errorAttributes = new HashMap<>();
-            errorAttributes.put("qrFileName", fileName);
+            errorAttributes.put("qrFileId", fileName);
             throw StoreQrFileException.builder().message(ErrorConstants.RETRIEVE_QR_FILE_ERROR_MSG)
                     .errorCode(ErrorConstants.RETRIEVE_QR_FILE_ERROR_CODE)
                     .errorAttributes(errorAttributes).build();
