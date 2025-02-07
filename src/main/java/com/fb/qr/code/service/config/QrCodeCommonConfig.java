@@ -10,15 +10,17 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class QrCodeCommonConfig {
 
-    @Value("${qr.code.generator}")
-    private String qrCodeGenrator;
+    @Value("${qr.code.generator.name}")
+    private String qrCodeGeneratorName;
     @Value("${qr.code.file.storage}")
     private String qrCodeFileStorage;
-    @Value("${qr.code.generator.url")
-    private String qrGeneratorUrl;
     @Value("${qr.code.file.storage.extension}")
     private String qrCodeFileStorageExtension;
     @Value("${qr.code.file.storage.media}")
     private String qrCodeFileStorageMedia;
+    @Value("${qr.code.file.size}")
+    private int qrCodeFileSize;
+    @Value("${qr.code.generator.url}")
+    private String qrCodeGeneratorUrl;
 
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface QrCodeGenerator {
 
-    ResponseEntity<?> downLoadQr(String url);
+    ResponseEntity<?> downloadQr(String url);
 
     ResponseEntity<?> generateQr(Map<String, Object> request);
 

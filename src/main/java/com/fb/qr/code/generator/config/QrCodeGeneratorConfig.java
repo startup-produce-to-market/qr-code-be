@@ -14,14 +14,14 @@ public class QrCodeGeneratorConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "qrmonkey")
-    @ConditionalOnProperty(name = "qr.code.generator", havingValue = "QR_MONKEY")
+    @ConditionalOnProperty(name = "qr.code.generator.name", havingValue = "QR_MONKEY")
     public QrMonkeyQrGeneratorConfig qrMonkeyQrGeneratorConfig() {
         return new QrMonkeyQrGeneratorConfig();
     }
 
     @Bean
     @ConfigurationProperties(prefix = "qrtiger")
-    @ConditionalOnProperty(name = "qr.code.generator", havingValue = "QR_TIGER")
+    @ConditionalOnProperty(name = "qr.code.generator.name", havingValue = "QR_TIGER")
     public QrTigerQrGeneratorConfig qrTigerQrGeneratorConfig() {
         return new QrTigerQrGeneratorConfig();
     }

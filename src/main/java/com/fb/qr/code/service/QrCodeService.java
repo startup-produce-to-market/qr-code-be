@@ -68,19 +68,21 @@ public class QrCodeService {
     }
 
     private void generateAndStoreQrCode(QrCode qrCode) {
-        switch (this.qrCodeCommonConfig.getQrCodeGenrator()) {
+        switch (this.qrCodeCommonConfig.getQrCodeGeneratorName()) {
             case "QR_TIGER":
                 Map<String, Object> qrGeneratorResponse = (Map<String, Object>) qrCodeGenerator.generateQr(
                         Map.of("text", qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getQrText(),
                                 "category", qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getQrCategory())).getBody();
                 assert qrGeneratorResponse != null;
-                ResponseEntity<?> qrFileContent = qrCodeGenerator.downLoadQr(String.valueOf(
+                ResponseEntity<?> qrFileContent = qrCodeGenerator.downloadQr(String.valueOf(
                         qrGeneratorResponse.get(qrCodeGeneratorConfig.qrTigerQrGeneratorConfig().getDownloadReference())));
                 executorService.execute(new StoreQrCodeProcess(qrCodeFileStorage, (byte[]) qrFileContent.getBody(),
                         Map.of("qrCodeId",qrCode.getId(),
                                 "extension", qrCodeCommonConfig.getQrCodeFileStorageExtension(),
                                 "content-type", qrCodeCommonConfig.getQrCodeFileStorageMedia()), qrCodeRepository));
 
+            case "QR_MONKEY":
+                break;
             default:
                 log.info("");
 

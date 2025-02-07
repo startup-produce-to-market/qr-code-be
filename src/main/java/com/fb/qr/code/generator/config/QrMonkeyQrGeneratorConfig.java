@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 public class QrMonkeyQrGeneratorConfig {
 
-    private String data;
+    private String qrData;
 
-    private String qrCodeDownloadFileType;
+    private String qrDownload;
 
-    private boolean qrCodeDownload;
+    private boolean qrCodeDownloadFile;
 
 }

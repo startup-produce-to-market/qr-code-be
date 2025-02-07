@@ -25,7 +25,7 @@ public class HttpQrCodeGenerator implements QrCodeGenerator {
     }
 
     @Override
-    public ResponseEntity<?> downLoadQr(String url) {
+    public ResponseEntity<?> downloadQr(String url) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -41,7 +41,7 @@ public class HttpQrCodeGenerator implements QrCodeGenerator {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(MediaType.parseMediaTypes("application/json; charset=utf-8"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, HashMap.class);
+        ResponseEntity<HashMap> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrCodeGeneratorUrl(), HttpMethod.POST, entity, HashMap.class);
         if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
             throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
 
@@ -53,7 +53,7 @@ public class HttpQrCodeGenerator implements QrCodeGenerator {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<byte[]> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrGeneratorUrl(), HttpMethod.POST, entity, byte[].class);
+        ResponseEntity<byte[]> createQrResponse = restTemplate.exchange(qrCodeCommonConfig.getQrCodeGeneratorUrl(), HttpMethod.POST, entity, byte[].class);
         if (!createQrResponse.getStatusCode().equals(HttpStatus.CREATED))
             throw GenerateQrCodeException.builder().message(ErrorConstants.GENERATE_QR_CODE_ERROR_MSG).errorCode(ErrorConstants.GENERATE_QR_CODE_ERROR_CODE).build();
 
