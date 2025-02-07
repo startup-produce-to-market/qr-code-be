@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class QrCodeGeneratorImpl implements QrCodeGenerator {
+public class HttpQrCodeGenerator implements QrCodeGenerator {
 
     private final RestTemplate restTemplate;
 
     private final QrCodeCommonConfig qrCodeCommonConfig;
 
-    public QrCodeGeneratorImpl(RestTemplate restTemplate, QrCodeCommonConfig qrCodeCommonConfig) {
+    public HttpQrCodeGenerator(RestTemplate restTemplate, QrCodeCommonConfig qrCodeCommonConfig) {
         this.restTemplate = restTemplate;
         this.qrCodeCommonConfig = qrCodeCommonConfig;
     }
