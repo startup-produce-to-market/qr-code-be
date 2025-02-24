@@ -29,3 +29,20 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    - name: Docker build and push
+      uses: docker/build-push-action@v2
+      with:
+        build-args: |
+          QR_GENERATOR_CLIENT_KEY: ${{ secrets.QR_GENERATOR_CLIENT_KEY }}
+          QR_GENERATOR_CLIENT_SECRET: ${{ secrets.QR_GENERATOR_CLIENT_SECRET }}
+          QR_STORAGE_AUTH_FILE: ${{ secrets.QR_STORAGE_AUTH_FILE }}
+        context: .
+        push: 'true'
+        tags: sparshneel/qr-code-be:latest, sparshneel/qr-code-be:${{ github.run_number }}
+
+          

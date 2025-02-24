@@ -14,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -31,9 +32,9 @@ public class GoogleDriveQrFileStorage implements QrCodeFileStorage {
     @PostConstruct
     private void createGoogleDriveInstance() {
         try {
-            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault().createScoped(List.of(DriveScopes.DRIVE_FILE));
+            GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("google-service-acc-450508-a1-b402a732d9e4.json")
+                    .getInputStream()).createScoped(List.of(DriveScopes.DRIVE_FILE));
             HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credentials);
-
             // Build a new authorized API client service.
             googleDriveClient = new Drive.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), requestInitializer).setApplicationName("Drive samples").build();
         } catch (IOException e) {
